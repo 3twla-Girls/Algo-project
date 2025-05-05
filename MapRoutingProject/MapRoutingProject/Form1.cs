@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -98,14 +99,52 @@ namespace MapRoutingProject
         {
             try
             {
-                Task1.solve ();
-                MessageBox.Show ("Solve completed successfully.");
+                // Time WITH I/O
+                Stopwatch swWithIO = Stopwatch.StartNew ();
+
+                Task1.loadMap ("D://MapRoutingProject//MapRoutingProject//MapRoutingProject//TEST CASES//[1] Sample Cases//Input//map1.txt"); // Replace with stored path if needed
+                Task1.loadQuery ("D://MapRoutingProject//MapRoutingProject//MapRoutingProject//TEST CASES//[1] Sample Cases//Input//queries1.txt"); // Replace with stored path if needed
+
+                var resultsWithIO = Task1.solve ();
+                Task1.WriteOutputsToFile ("D://MapRoutingProject//MapRoutingProject//MapRoutingProject//results.txt" , resultsWithIO);
+
+                swWithIO.Stop ();
+                double timeWithIO = swWithIO.Elapsed.TotalMilliseconds;
+
+                // Time WITHOUT I/O
+                Stopwatch swWithoutIO = Stopwatch.StartNew ();
+
+                var resultsWithoutIO = Task1.solve ();
+
+                swWithoutIO.Stop ();
+                double timeWithoutIO = swWithoutIO.Elapsed.TotalMilliseconds;
+
+
+                // Now compare files
+                bool isCorrect = Task1.CompareOutputFiles (
+                    "D://MapRoutingProject//MapRoutingProject//MapRoutingProject//results.txt" ,
+                    "D://MapRoutingProject//MapRoutingProject//MapRoutingProject//TEST CASES//[1] Sample Cases//Output//output1.txt"
+                );
+
+                // Console + MessageBox feedback
+                Console.WriteLine ($"Time WITH I/O: {timeWithIO:F2} ms");
+                Console.WriteLine ($"Time WITHOUT I/O: {timeWithoutIO:F2} ms");
+                Console.WriteLine ("Comparison result: " + ( isCorrect ? "Passed" : "Failed" ));
+
+                MessageBox.Show (
+                    $"Solve completed successfully.\n" +
+                    $"Time WITH I/O: {timeWithIO:F2} ms\n" +
+                    $"Time WITHOUT I/O: {timeWithoutIO:F2} ms\n" +
+                    $"Comparison result: {( isCorrect ? "Passed" : "Failed" )}"
+                );
             }
             catch ( Exception ex )
             {
                 MessageBox.Show ("Unhandled exception during solve:\n" + ex.Message + "\n" + ex.StackTrace);
             }
         }
+
+
 
     }
 }
