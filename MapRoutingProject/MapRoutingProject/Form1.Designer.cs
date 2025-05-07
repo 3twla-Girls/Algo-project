@@ -15,13 +15,13 @@ namespace MapRoutingProject
         ///  Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
+        protected override void Dispose ( bool disposing )
         {
-            if (disposing && (components != null))
+            if ( disposing && ( components != null ) )
             {
-                components.Dispose();
+                components.Dispose ();
             }
-            base.Dispose(disposing);
+            base.Dispose (disposing);
         }
 
         #region Windows Form Designer generated code
@@ -32,7 +32,7 @@ namespace MapRoutingProject
         /// </summary>
         private void InitializeComponent ( )
         {
-            button1 = new Button ();
+            /*button1 = new Button ();
             button2 = new Button ();
             dataGridView1 = new DataGridView ();
             dataGridView2 = new DataGridView ();
@@ -50,7 +50,7 @@ namespace MapRoutingProject
             button1.TabIndex = 0;
             button1.Text = "Load Map File";
             button1.UseVisualStyleBackColor = true;
-            button1.Click +=  button1_Click ;
+            button1.Click += button1_Click;
             // 
             // button2
             // 
@@ -61,7 +61,7 @@ namespace MapRoutingProject
             button2.TabIndex = 1;
             button2.Text = "Load Query File";
             button2.UseVisualStyleBackColor = true;
-            button2.Click +=  button2_Click ;
+            button2.Click += button2_Click;
             // 
             // dataGridView1
             // 
@@ -72,7 +72,7 @@ namespace MapRoutingProject
             dataGridView1.RowHeadersWidth = 62;
             dataGridView1.Size = new Size (411 , 390);
             dataGridView1.TabIndex = 2;
-            dataGridView1.CellContentClick +=  dataGridView1_CellContentClick ;
+            dataGridView1.CellContentClick += dataGridView1_CellContentClick;
             // 
             // dataGridView2
             // 
@@ -83,7 +83,7 @@ namespace MapRoutingProject
             dataGridView2.RowHeadersWidth = 62;
             dataGridView2.Size = new Size (288 , 180);
             dataGridView2.TabIndex = 3;
-            dataGridView2.CellContentClick +=  dataGridView2_CellContentClick_1 ;
+            dataGridView2.CellContentClick += dataGridView2_CellContentClick_1;
             // 
             // button3
             // 
@@ -93,33 +93,34 @@ namespace MapRoutingProject
             button3.TabIndex = 4;
             button3.Text = "button3";
             button3.UseVisualStyleBackColor = true;
-            button3.Click +=  button3_Click ;
+            button3.Click += button3_Click;*/
             // 
             // Form1
             // 
-            AutoScaleDimensions = new SizeF (8F , 20F);
-            AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size (918 , 519);
-            Controls.Add (button3);
+            this.SuspendLayout ();
+            this.AutoScaleDimensions = new SizeF (8F , 20F);
+            this.AutoScaleMode = AutoScaleMode.Font;
+            this.ClientSize = new Size (918 , 519);
+            /*Controls.Add (button3);
             Controls.Add (dataGridView2);
             Controls.Add (dataGridView1);
             Controls.Add (button2);
-            Controls.Add (button1);
-            Margin = new Padding (2);
-            Name = "Form1";
-            Text = "Form1";
-            Load +=  Form1_Load ;
-            ( (System.ComponentModel.ISupportInitialize) dataGridView1 ).EndInit ();
-            ( (System.ComponentModel.ISupportInitialize) dataGridView2 ).EndInit ();
-            ResumeLayout (false);
+            Controls.Add (button1);*/
+            this.Margin = new Padding (2);
+            this.Name = "Form1";
+            this.Text = "Form1";
+            this.Load += Form1_Load;
+            /*( (System.ComponentModel.ISupportInitialize) dataGridView1 ).EndInit ();
+            ( (System.ComponentModel.ISupportInitialize) dataGridView2 ).EndInit ();*/
+            this.ResumeLayout (false);
         }
 
         #endregion
 
-        private Button button1;
+        /*private Button button1;
         private Button button2;
         private DataGridView dataGridView1;
         private DataGridView dataGridView2;
-        private Button button3;
+        private Button button3;*/
     }
 }

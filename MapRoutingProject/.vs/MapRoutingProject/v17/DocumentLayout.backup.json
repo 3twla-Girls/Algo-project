@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "D:\\MapRoutingProject\\MapRoutingProject\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{EC654FFE-C299-4035-926E-D8574B5D952C}|MapRoutingProject\\MapRoutingProject.csproj|d:\\maproutingproject\\maproutingproject\\maproutingproject\\input.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EC654FFE-C299-4035-926E-D8574B5D952C}|MapRoutingProject\\MapRoutingProject.csproj|solutionrelative:maproutingproject\\input.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{EC654FFE-C299-4035-926E-D8574B5D952C}|MapRoutingProject\\MapRoutingProject.csproj|d:\\maproutingproject\\maproutingproject\\maproutingproject\\task1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EC654FFE-C299-4035-926E-D8574B5D952C}|MapRoutingProject\\MapRoutingProject.csproj|solutionrelative:maproutingproject\\task1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -11,20 +15,12 @@
       "RelativeMoniker": "D:0:0:{EC654FFE-C299-4035-926E-D8574B5D952C}|MapRoutingProject\\MapRoutingProject.csproj|solutionrelative:maproutingproject\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EC654FFE-C299-4035-926E-D8574B5D952C}|MapRoutingProject\\MapRoutingProject.csproj|d:\\maproutingproject\\maproutingproject\\maproutingproject\\results.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{EC654FFE-C299-4035-926E-D8574B5D952C}|MapRoutingProject\\MapRoutingProject.csproj|solutionrelative:maproutingproject\\results.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EC654FFE-C299-4035-926E-D8574B5D952C}|MapRoutingProject\\MapRoutingProject.csproj|d:\\maproutingproject\\maproutingproject\\maproutingproject\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EC654FFE-C299-4035-926E-D8574B5D952C}|MapRoutingProject\\MapRoutingProject.csproj|solutionrelative:maproutingproject\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EC654FFE-C299-4035-926E-D8574B5D952C}|MapRoutingProject\\MapRoutingProject.csproj|d:\\maproutingproject\\maproutingproject\\maproutingproject\\form1.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EC654FFE-C299-4035-926E-D8574B5D952C}|MapRoutingProject\\MapRoutingProject.csproj|solutionrelative:maproutingproject\\form1.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{EC654FFE-C299-4035-926E-D8574B5D952C}|MapRoutingProject\\MapRoutingProject.csproj|D:\\MapRoutingProject\\MapRoutingProject\\maproutingproject\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{EC654FFE-C299-4035-926E-D8574B5D952C}|MapRoutingProject\\MapRoutingProject.csproj|solutionrelative:maproutingproject\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EC654FFE-C299-4035-926E-D8574B5D952C}|MapRoutingProject\\MapRoutingProject.csproj|d:\\maproutingproject\\maproutingproject\\maproutingproject\\form1.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EC654FFE-C299-4035-926E-D8574B5D952C}|MapRoutingProject\\MapRoutingProject.csproj|solutionrelative:maproutingproject\\form1.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -34,7 +30,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -42,66 +38,55 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "results.txt",
-              "DocumentMoniker": "D:\\MapRoutingProject\\MapRoutingProject\\MapRoutingProject\\results.txt",
-              "RelativeDocumentMoniker": "MapRoutingProject\\results.txt",
-              "ToolTip": "D:\\MapRoutingProject\\MapRoutingProject\\MapRoutingProject\\results.txt",
-              "RelativeToolTip": "MapRoutingProject\\results.txt",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
-              "WhenOpened": "2025-05-04T18:51:05.276Z",
+              "DocumentIndex": 0,
+              "Title": "Input.cs",
+              "DocumentMoniker": "D:\\MapRoutingProject\\MapRoutingProject\\MapRoutingProject\\Input.cs",
+              "RelativeDocumentMoniker": "MapRoutingProject\\Input.cs",
+              "ToolTip": "D:\\MapRoutingProject\\MapRoutingProject\\MapRoutingProject\\Input.cs",
+              "RelativeToolTip": "MapRoutingProject\\Input.cs",
+              "ViewState": "AgIAAGMAAAAAAAAAAAAywHIAAAB4AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-07T15:03:27.469Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Program.cs",
-              "DocumentMoniker": "D:\\MapRoutingProject\\MapRoutingProject\\MapRoutingProject\\Program.cs",
-              "RelativeDocumentMoniker": "MapRoutingProject\\Program.cs",
-              "ToolTip": "D:\\MapRoutingProject\\MapRoutingProject\\MapRoutingProject\\Program.cs",
-              "RelativeToolTip": "MapRoutingProject\\Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAnAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-01T21:07:46.194Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "Task1.cs",
               "DocumentMoniker": "D:\\MapRoutingProject\\MapRoutingProject\\MapRoutingProject\\Task1.cs",
               "RelativeDocumentMoniker": "MapRoutingProject\\Task1.cs",
-              "ToolTip": "D:\\MapRoutingProject\\MapRoutingProject\\MapRoutingProject\\Task1.cs*",
-              "RelativeToolTip": "MapRoutingProject\\Task1.cs*",
-              "ViewState": "AgIAABIBAAAAAAAAAAAzwDQBAAAAAAAAAAAAAA==",
+              "ToolTip": "D:\\MapRoutingProject\\MapRoutingProject\\MapRoutingProject\\Task1.cs",
+              "RelativeToolTip": "MapRoutingProject\\Task1.cs",
+              "ViewState": "AgIAADMBAAAAAAAAAAAiwF8BAAAOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-01T20:52:51.38Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "Form1.cs",
               "DocumentMoniker": "D:\\MapRoutingProject\\MapRoutingProject\\MapRoutingProject\\Form1.cs",
               "RelativeDocumentMoniker": "MapRoutingProject\\Form1.cs",
               "ToolTip": "D:\\MapRoutingProject\\MapRoutingProject\\MapRoutingProject\\Form1.cs",
               "RelativeToolTip": "MapRoutingProject\\Form1.cs",
-              "ViewState": "AgIAAEkAAAAAAAAAAAAwwHQAAAA2AAAAAAAAAA==",
+              "ViewState": "AgIAABgAAAAAAAAAAAAQwB4AAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-01T20:51:31.718Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 3,
               "Title": "Form1.Designer.cs",
               "DocumentMoniker": "D:\\MapRoutingProject\\MapRoutingProject\\MapRoutingProject\\Form1.Designer.cs",
               "RelativeDocumentMoniker": "MapRoutingProject\\Form1.Designer.cs",
               "ToolTip": "D:\\MapRoutingProject\\MapRoutingProject\\MapRoutingProject\\Form1.Designer.cs",
               "RelativeToolTip": "MapRoutingProject\\Form1.Designer.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAWAAAAAAAAAA==",
+              "ViewState": "AgIAABEAAAAAAAAAAIA4wCAAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-01T20:50:26.678Z"
+              "WhenOpened": "2025-05-01T20:50:26.678Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -112,7 +97,8 @@
               "ToolTip": "D:\\MapRoutingProject\\MapRoutingProject\\MapRoutingProject\\Form1.cs [Design]",
               "RelativeToolTip": "MapRoutingProject\\Form1.cs [Design]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-01T20:49:59.126Z"
+              "WhenOpened": "2025-05-01T20:49:59.126Z",
+              "EditorCaption": " [Design]"
             }
           ]
         }

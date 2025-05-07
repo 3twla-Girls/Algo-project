@@ -342,14 +342,14 @@ namespace MapRoutingProject
             {
                 if ( file1Lines [i].Trim () != file2Lines [i].Trim () )
                 {
-                    Console.WriteLine ($"Mismatch at line {i + 1}:");
+                    /*Console.WriteLine ($"Mismatch at line {i + 1}:");
                     Console.WriteLine ($"File1: {file1Lines [i]}");
-                    Console.WriteLine ($"File2: {file2Lines [i]}");
+                    Console.WriteLine ($"File2: {file2Lines [i]}");*/
                     return false;
                 }
             }
 
-            Console.WriteLine ("Files match.");
+            //Console.WriteLine ("Files match.");
             return true;
         }
 
