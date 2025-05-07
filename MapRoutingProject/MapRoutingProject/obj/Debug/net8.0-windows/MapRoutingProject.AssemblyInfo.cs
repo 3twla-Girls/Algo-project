@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MapRoutingProject")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ac5cbbb36a9ba33a66a69f99ea2f00a5086116a5")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+027df0dadb014f8cb6673d069b761ef0e7cedf63")]
 [assembly: System.Reflection.AssemblyProductAttribute("MapRoutingProject")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MapRoutingProject")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

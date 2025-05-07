@@ -6,6 +6,211 @@ using System.Numerics;
 using System.Runtime.Intrinsics;
 using System.Text;
 using System.Threading.Tasks;
+public class FibonacciHeapNode<T>
+{
+    public T Data;
+    public double Key;
+    public FibonacciHeapNode<T> Parent;
+    public FibonacciHeapNode<T> Child;
+    public FibonacciHeapNode<T> Left;
+    public FibonacciHeapNode<T> Right;
+    public int Degree;
+    public bool Mark;
+
+    public FibonacciHeapNode ( T data , double key )
+    {
+        Data = data;
+        Key = key;
+        Left = Right = this;
+    }
+}
+
+public class FibonacciHeap<T>
+{
+    private FibonacciHeapNode<T> minNode;
+    private int nodeCount;
+    private Dictionary<T , FibonacciHeapNode<T>> nodeLookup = new ();
+
+    public bool IsEmpty => minNode == null;
+
+    public void Insert ( T data , double key )
+    {
+        var node = new FibonacciHeapNode<T> (data , key);
+        nodeLookup [data] = node;
+        minNode = MergeLists (minNode , node);
+        nodeCount++;
+    }
+
+    public void DecreaseKey ( T data , double newKey )
+    {
+        if ( !nodeLookup.TryGetValue (data , out var node) ) return;
+        if ( newKey > node.Key ) throw new InvalidOperationException ("New key is greater");
+
+        node.Key = newKey;
+        var parent = node.Parent;
+
+        if ( parent != null && node.Key < parent.Key )
+        {
+            Cut (node , parent);
+            CascadingCut (parent);
+        }
+
+        if ( node.Key < minNode.Key )
+            minNode = node;
+    }
+
+    public T ExtractMin ( )
+    {
+        var z = minNode;
+        if ( z != null )
+        {
+            if ( z.Child != null )
+            {
+                var children = new List<FibonacciHeapNode<T>> ();
+                var x = z.Child;
+                do
+                {
+                    children.Add (x);
+                    x = x.Right;
+                } while ( x != z.Child );
+
+                foreach ( var child in children )
+                {
+                    child.Parent = null;
+                    minNode = MergeLists (minNode , child);
+                }
+            }
+
+            z.Left.Right = z.Right;
+            z.Right.Left = z.Left;
+
+            if ( z == z.Right )
+                minNode = null;
+            else
+            {
+                minNode = z.Right;
+                Consolidate ();
+            }
+
+            nodeCount--;
+            nodeLookup.Remove (z.Data);
+        }
+
+        return z?.Data;
+    }
+
+    public bool Contains ( T data ) => nodeLookup.ContainsKey (data);
+    public double GetKey ( T data ) => nodeLookup [data].Key;
+
+    private void Cut ( FibonacciHeapNode<T> x , FibonacciHeapNode<T> y )
+    {
+        if ( x.Right == x )
+            y.Child = null;
+        else
+        {
+            x.Right.Left = x.Left;
+            x.Left.Right = x.Right;
+            if ( y.Child == x )
+                y.Child = x.Right;
+        }
+
+        y.Degree--;
+        minNode = MergeLists (minNode , x);
+        x.Parent = null;
+        x.Mark = false;
+    }
+
+    private void CascadingCut ( FibonacciHeapNode<T> y )
+    {
+        var z = y.Parent;
+        if ( z != null )
+        {
+            if ( !y.Mark )
+                y.Mark = true;
+            else
+            {
+                Cut (y , z);
+                CascadingCut (z);
+            }
+        }
+    }
+
+    private FibonacciHeapNode<T> MergeLists ( FibonacciHeapNode<T> a , FibonacciHeapNode<T> b )
+    {
+        if ( a == null ) return b;
+        if ( b == null ) return a;
+
+        var temp = a.Right;
+        a.Right = b.Right;
+        a.Right.Left = a;
+        b.Right = temp;
+        b.Right.Left = b;
+
+        return a.Key < b.Key ? a : b;
+    }
+
+    private void Consolidate ( )
+    {
+        int maxDegree = (int) Math.Log (nodeCount) + 1;
+        var A = new FibonacciHeapNode<T> [maxDegree];
+
+        var nodes = new List<FibonacciHeapNode<T>> ();
+        var x = minNode;
+        if ( x != null )
+        {
+            do
+            {
+                nodes.Add (x);
+                x = x.Right;
+            } while ( x != minNode );
+        }
+
+        foreach ( var w in nodes )
+        {
+            var xNode = w;
+            int d = xNode.Degree;
+            while ( A [d] != null )
+            {
+                var y = A [d];
+                if ( xNode.Key > y.Key )
+                    (xNode, y) = (y, xNode);
+
+                Link (y , xNode);
+                A [d] = null;
+                d++;
+            }
+            A [d] = xNode;
+        }
+
+        minNode = null;
+        foreach ( var node in A )
+            if ( node != null )
+                minNode = MergeLists (minNode , node);
+    }
+
+    private void Link ( FibonacciHeapNode<T> y , FibonacciHeapNode<T> x )
+    {
+        y.Left.Right = y.Right;
+        y.Right.Left = y.Left;
+
+        y.Parent = x;
+        if ( x.Child == null )
+        {
+            x.Child = y;
+            y.Left = y.Right = y;
+        }
+        else
+        {
+            y.Left = x.Child;
+            y.Right = x.Child.Right;
+            x.Child.Right.Left = y;
+            x.Child.Right = y;
+        }
+
+        x.Degree++;
+        y.Mark = false;
+    }
+}
 
 
 namespace MapRoutingProject
@@ -281,34 +486,46 @@ namespace MapRoutingProject
                 path.Add (at.Value);
             path.Reverse ();
 
+            output.Path = path;
             output.Total_walking_distance = 0.0;
             output.Vehicle_distance = 0.0;
-            output.Total_distance = Math.Round (distanceTo [end] , 2);
-            double x1 = 0.0;
 
-            if ( path [0] == -1 )
+            // Iterative calculation of distances
+            for ( int i = 1 ; i < path.Count ; i++ )
             {
-                output.Total_walking_distance += distanceTo [path [1]];
+                long from = path [i - 1];
+                long to = path [i];
+
+                // Get distance between two connected nodes
+                var edge = graph [from].neighbor_intersections
+                    .FirstOrDefault (n => n.Item1 == to);
+
+                if ( from == -1 || to == 1000000 )
+                {
+                    output.Total_walking_distance += edge.Item2;
+                }
+                else
+                {
+                    output.Vehicle_distance += edge.Item2;
+                }
+            }
+            if ( path [0]==-1 )
+            {
                 path.RemoveAt (0);
             }
-            if ( path [path.Count - 1] == 1000000 )
+            if ( path [path.Count-1] == 1000000 )
             {
                 path.RemoveAt (path.Count - 1);
-                output.Total_walking_distance += Math.Abs (distanceTo [end] - distanceTo [path [path.Count - 1]]);
             }
-            x1 = output.Total_walking_distance;
+
+            output.Total_distance = Math.Round (output.Total_walking_distance + output.Vehicle_distance , 2);
             output.Total_walking_distance = Math.Round (output.Total_walking_distance , 2);
-            output.Path = path;
-            output.Shortest_time = Math.Round (cost [end] * 60 , 2);
-
-            // Do not round prematurely, ensure you're getting the correct difference first.
-            output.Vehicle_distance = Math.Abs (distanceTo [end] - x1);
-
-            // Round the final value for output only, after calculations
             output.Vehicle_distance = Math.Round (output.Vehicle_distance , 2);
+            output.Shortest_time = Math.Round (cost [end] * 60 , 2);
 
             return output;
         }
+
 
 
         public static void WriteOutputsToFile ( string outputFilePath , List<Output> results )
@@ -342,9 +559,9 @@ namespace MapRoutingProject
             {
                 if ( file1Lines [i].Trim () != file2Lines [i].Trim () )
                 {
-                    /*Console.WriteLine ($"Mismatch at line {i + 1}:");
+                    Console.WriteLine ($"Mismatch at line {i + 1}:");
                     Console.WriteLine ($"File1: {file1Lines [i]}");
-                    Console.WriteLine ($"File2: {file2Lines [i]}");*/
+                    Console.WriteLine ($"File2: {file2Lines [i]}");
                     return false;
                 }
             }
