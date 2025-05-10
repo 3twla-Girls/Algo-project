@@ -262,7 +262,7 @@ namespace MapRoutingProject
             var previous = new Dictionary<long , long?> (count);
             var visited = new HashSet<long> ();
             var pq = new PriorityQueue<long , double> (count);
-
+            //**************************************
             // Initialize data structures
             foreach ( var node in graph.Keys )
             {
