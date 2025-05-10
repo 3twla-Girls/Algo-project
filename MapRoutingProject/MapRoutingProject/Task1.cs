@@ -244,6 +244,22 @@ namespace MapRoutingProject
             return graph;
         }
 
+        //public static List<Output> solve()
+        //{
+        //    // Using sequential processing here. If you have many queries,
+        //    // you may try Parallel.For, but for some workloads the overhead hurts.
+        //    var results = new List<Output>(Task1.Queries.Count);
+        //    foreach (var q in Task1.Queries)
+        //    {
+        //        var temp_graph = CloneGraphForQuery();
+        //        CalculateGraph(q, temp_graph);
+        //        results.Add(dijkstra(temp_graph, -1, 1000000));
+        //    }
+        //    return results;
+        //}
+
+
+
         public static List<Output> solve()
         {
             var results = new Output[Task1.Queries.Count]; // Use array for thread-safe index-based writing
@@ -332,6 +348,7 @@ namespace MapRoutingProject
             output.Vehicle_distance = 0.0;
 
             // Iterate through the found path and compute distances.
+            double Total_dis_walking = 0.0, total_dis_vhicle = 0.0;
             for (int i = 1; i < path.Count; i++)
             {
                 long from = path[i - 1];
@@ -347,10 +364,12 @@ namespace MapRoutingProject
                     }
                 }
                 if (from == -1 || to == 1000000)
-                    output.Total_walking_distance += edgeDistance;
+                    Total_dis_walking += edgeDistance;
                 else
-                    output.Vehicle_distance += edgeDistance;
+                    total_dis_vhicle += edgeDistance;
             }
+            output.Total_walking_distance += Total_dis_walking;
+            output.Vehicle_distance += total_dis_vhicle;
 
             if (path.Count > 0 && path[0] == -1)
                 path.RemoveAt(0);
