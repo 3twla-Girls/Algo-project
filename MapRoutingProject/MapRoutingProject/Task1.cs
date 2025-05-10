@@ -206,118 +206,132 @@ namespace MapRoutingProject
             return graph;
         }
 
+
         public static List<Output> solve ( )
         {
-            List<Output> results = new List<Output> ();
-            //Stopwatch sw = Stopwatch.StartNew ();
-            foreach ( var q in Queries )
-            {
-                var temp_graph = DeepCopyIntersections (Intersections);
-                CalculateGraph (q , temp_graph);
-                results.Add (dijkstra (temp_graph , -1 , 1000000));
-            }
-            //sw.Stop ();
-            return results;
-        }
+            // Pre-allocate results list with exact capacity
+            var results = new Output [Queries.Count];
+            var totalTime = 0.0;
 
-
-        private static Dictionary<long , Intersection> DeepCopyIntersections ( Dictionary<long , Intersection> original )
-        {
-            var copy = new Dictionary<long , Intersection> ();
-            foreach ( var kvp in original )
+            // Determine optimal degree of parallelism
+            var options = new ParallelOptions
             {
-                copy [kvp.Key] = new Intersection
+                MaxDegreeOfParallelism = Environment.ProcessorCount
+            };
+
+            Stopwatch sw = Stopwatch.StartNew();
+            // Process queries in parallel
+            double t = 0.0;
+            Parallel.For (0 , Queries.Count , options , i =>
+            {
+                sw.Restart ();
+                var q = Queries [i];
+               
+
+                // Create thread-local graph copy
+                var tempGraph = new Dictionary<long , Intersection> (Intersections.Count);
+                foreach ( var kvp in Intersections )
                 {
-                    x = kvp.Value.x ,
-                    y = kvp.Value.y ,
-                    neighbor_intersections = new List<(long, double, double)> (kvp.Value.neighbor_intersections)
-                };
-            }
-            return copy;
+                    tempGraph [kvp.Key] = new Intersection
+                    {
+                        x = kvp.Value.x ,
+                        y = kvp.Value.y ,
+                        neighbor_intersections = new List<(long, double, double)> (kvp.Value.neighbor_intersections)
+                    };
+                }
+
+                // Calculate graph modifications
+                CalculateGraph (q , tempGraph);
+                // Run Dijkstra and store result
+                results [i] =dijkstra (tempGraph , -1 , 1000000);
+                sw.Stop ();
+                t += sw.ElapsedMilliseconds;
+            });
+            Console.WriteLine ("timee:" + t);
+
+            return results.ToList ();
         }
 
-        public static Output dijkstra ( Dictionary<long , Intersection> graph , long start , long end )
+        private static Output dijkstra ( Dictionary<long , Intersection> graph , long start , long end )
         {
             var output = new Output ();
-            var cost = new Dictionary<long , double> ();
-            var previous = new Dictionary<long , long?> ();
-            var distanceTo = new Dictionary<long , double> ();
+            var count = graph.Count;
 
+            // Pre-allocate dictionaries with exact capacity
+            var cost = new Dictionary<long , double> (count);
+            var previous = new Dictionary<long , long?> (count);
+            var visited = new HashSet<long> ();
+            var pq = new PriorityQueue<long , double> (count);
+
+            // Initialize data structures
             foreach ( var node in graph.Keys )
             {
                 cost [node] = double.MaxValue;
                 previous [node] = null;
-                distanceTo [node] = 0.0;
             }
 
-            cost [start] = 0.0;
-            distanceTo [start] = 0.0;
-
-            var pq = new PriorityQueue<long , double> ();
-            pq.Enqueue (start , 0.0);
+            cost [start] = 0;
+            pq.Enqueue (start , 0);
 
             while ( pq.Count > 0 )
             {
-                pq.TryDequeue (out long currentNode , out double currentTime);
+                var currentNode = pq.Dequeue ();
 
-                if ( currentTime > cost [currentNode] ) continue;
+                if ( visited.Contains (currentNode) ) continue;
+                if ( currentNode == end ) break;
 
-                foreach ( var (neighborId, distance, speed) in graph [currentNode].neighbor_intersections )
+                visited.Add (currentNode);
+                var currentCost = cost [currentNode];
+                var neighbors = graph [currentNode].neighbor_intersections;
+
+                // Process neighbors with minimal allocations
+                for ( int i = 0 ; i < neighbors.Count ; i++ )
                 {
-                    double time = distance / speed;
-                    double newTime = cost [currentNode] + time;
+                    var (neighborId, distance, speed) = neighbors [i];
+                    if ( visited.Contains (neighborId) ) continue;
 
-                    if ( newTime < cost [neighborId] )
+                    var newCost = currentCost + ( distance / speed );
+                    if ( newCost < cost [neighborId] )
                     {
-                        cost [neighborId] = newTime;
-                        distanceTo [neighborId] = distanceTo [currentNode] + distance;
+                        cost [neighborId] = newCost;
                         previous [neighborId] = currentNode;
-                        pq.Enqueue (neighborId , newTime);
+                        pq.Enqueue (neighborId , newCost);
                     }
                 }
             }
 
+            // Optimized path reconstruction
             var path = new List<long> ();
             for ( long? at = end ; at != null ; at = previous [at.Value] )
+            {
                 path.Add (at.Value);
+            }
             path.Reverse ();
 
-            output.Path = path;
-            output.Total_walking_distance = 0.0;
-            output.Vehicle_distance = 0.0;
-
-            // Iterative calculation of distances
+            // Calculate distances
+            double walkingDist = 0, vehicleDist = 0;
             for ( int i = 1 ; i < path.Count ; i++ )
             {
-                long from = path [i - 1];
-                long to = path [i];
-
-                // Get distance between two connected nodes
-                var edge = graph [from].neighbor_intersections
-                    .FirstOrDefault (n => n.Item1 == to);
+                var from = path [i - 1];
+                var to = path [i];
+                var edge = graph [from].neighbor_intersections.Find (n => n.Item1 == to);
 
                 if ( from == -1 || to == 1000000 )
-                {
-                    output.Total_walking_distance += edge.Item2;
-                }
+                    walkingDist += edge.Item2;
                 else
-                {
-                    output.Vehicle_distance += edge.Item2;
-                }
-            }
-            if ( path [0]==-1 )
-            {
-                path.RemoveAt (0);
-            }
-            if ( path [path.Count-1] == 1000000 )
-            {
-                path.RemoveAt (path.Count - 1);
+                    vehicleDist += edge.Item2;
             }
 
-            output.Total_distance = Math.Round (output.Total_walking_distance + output.Vehicle_distance , 2);
-            output.Total_walking_distance = Math.Round (output.Total_walking_distance , 2);
-            output.Vehicle_distance = Math.Round (output.Vehicle_distance , 2);
+            // Clean path endpoints
+            if ( path.Count > 0 && path [0] == -1 ) path.RemoveAt (0);
+            if ( path.Count > 0 && path [^1] == 1000000 ) path.RemoveAt (path.Count - 1);
+
+            // Set output values
+            output.Path = path;
             output.Shortest_time = Math.Round (cost [end] * 60 , 2);
+            output.Total_distance = Math.Round (walkingDist + vehicleDist , 2);
+            output.Total_walking_distance = Math.Round (walkingDist , 2);
+            output.Vehicle_distance = Math.Round (vehicleDist , 2);
 
             return output;
         }
