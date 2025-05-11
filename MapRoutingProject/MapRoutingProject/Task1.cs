@@ -15,10 +15,9 @@ namespace MapRoutingProject
 
     public struct Intersection
     {
-        //public long ID;
         public double x;
         public double y;
-        //Id,length,speed
+        //id,distance,speed
         public List<(long, double, double)> neighbor_intersections;
 
     }

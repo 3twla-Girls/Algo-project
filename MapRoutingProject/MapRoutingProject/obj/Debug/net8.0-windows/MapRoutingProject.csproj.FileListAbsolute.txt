@@ -30,5 +30,5 @@ D:\MapRoutingProject\MapRoutingProject\MapRoutingProject\obj\Debug\net8.0-window
 D:\MapRoutingProject\MapRoutingProject\MapRoutingProject\obj\Debug\net8.0-windows\MapRoutingProject.genruntimeconfig.cache
 D:\MapRoutingProject\MapRoutingProject\MapRoutingProject\obj\Debug\net8.0-windows\ref\MapRoutingProject.dll
 D:\MapRoutingProject\MapRoutingProject\MapRoutingProject\obj\Debug\net8.0-windows\MapRoutingProject.Properties.Resources.resources
-D:\MapRoutingProject\MapRoutingProject\MapRoutingProject\obj\Debug\net8.0-windows\ConsoleHelper.resources
 D:\MapRoutingProject\MapRoutingProject\MapRoutingProject\obj\Debug\net8.0-windows\MapRoutingProject.sourcelink.json
+D:\MapRoutingProject\MapRoutingProject\MapRoutingProject\obj\Debug\net8.0-windows\MapRoutingProject.Form1.resources
