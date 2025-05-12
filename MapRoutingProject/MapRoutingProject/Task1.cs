@@ -42,6 +42,77 @@ namespace MapRoutingProject
         public double Vehicle_distance;
 
     }
+    public class GraphAdapter
+    {
+        private readonly Dictionary<long, Intersection> baseGraph;
+        private readonly Dictionary<long, List<(long, double, double)>> extraEdges = new();
+        private readonly Dictionary<long, Intersection> virtualNodes = new();
+
+        public GraphAdapter(Dictionary<long, Intersection> baseGraph)
+        {
+            this.baseGraph = baseGraph;
+        }
+
+        public void AddVirtualNode(long id, double x, double y)
+        {
+            if (!virtualNodes.ContainsKey(id))
+            {
+                virtualNodes[id] = new Intersection
+                {
+                    x = x,
+                    y = y,
+                    neighbor_intersections = new List<(long, double, double)>()
+                };
+            }
+        }
+
+        public void AddEdge(long from, long to, double length, double speed)
+        {
+            if (!extraEdges.ContainsKey(from))
+            {
+                extraEdges[from] = new List<(long, double, double)>();
+            }
+            extraEdges[from].Add((to, length, speed));
+        }
+
+        public Intersection GetNode(long id)
+        {
+            if (virtualNodes.ContainsKey(id))
+            {
+                var node = virtualNodes[id];
+                node.neighbor_intersections = extraEdges.ContainsKey(id)
+                    ? extraEdges[id]
+                    : new List<(long, double, double)>();
+                return node;
+            }
+
+            if (baseGraph.ContainsKey(id))
+            {
+                var baseNode = baseGraph[id];
+                var neighbors = new List<(long, double, double)>(baseNode.neighbor_intersections);
+                if (extraEdges.ContainsKey(id))
+                {
+                    neighbors.AddRange(extraEdges[id]);
+                }
+                return new Intersection
+                {
+                    x = baseNode.x,
+                    y = baseNode.y,
+                    neighbor_intersections = neighbors
+                };
+            }
+
+            return new Intersection();
+        }
+
+        public IEnumerable<long> GetAllNodeIds()
+        {
+            return baseGraph.Keys
+                .Concat(virtualNodes.Keys)
+                .Concat(extraEdges.Keys)
+                .Distinct();
+        }
+    }
     internal class Task1
     {
 
@@ -55,37 +126,47 @@ namespace MapRoutingProject
         public static void loadMap(string filePath)
         {
             Intersections.Clear();
-            var lines = File.ReadAllLines(filePath);
-            int index = 0;
-
-            // read the number of intersections and conver it to int
-            int n = int.Parse(lines[index++]);
-            // index=1
-            for (int i = 0; i < n; i++)
+            using (StreamReader reader = new StreamReader(filePath))
             {
-                var parts = lines[index++].Split(' ');
-                Intersection intersection = new Intersection();
-                long id = long.Parse(parts[0]);
-                intersection.x = double.Parse(parts[1]);
-                intersection.y = double.Parse(parts[2]);
-                intersection.neighbor_intersections = new List<(long, double, double)>();
-                Intersections[id] = intersection;
-            }
-            // read the number of roads and conver it to int
-            int m = int.Parse(lines[index++]);
-            for (int i = 0; i < m; i++)
-            {
-                var parts = lines[index++].Split(' ');
+                // Read the number of intersections
+                string line = reader.ReadLine();
+                int n = int.Parse(line);
 
-                long from_id = long.Parse(parts[0]);
-                long to_id = long.Parse(parts[1]);
-                double LengthKm = double.Parse(parts[2]);
-                double SpeedKmph = double.Parse(parts[3]);
-                Intersection intersection = Intersections[from_id];
-                Intersection intersection2 = Intersections[to_id];
-                intersection.neighbor_intersections.Add((to_id, LengthKm, SpeedKmph));
-                intersection2.neighbor_intersections.Add((from_id, LengthKm, SpeedKmph));
+                // Read each intersection
+                for (int i = 0; i < n; i++)
+                {
+                    line = reader.ReadLine();
+                    var parts = line.Split(' ');
+                    Intersection intersection = new Intersection
+                    {
+                        x = double.Parse(parts[1]),
+                        y = double.Parse(parts[2]),
+                        neighbor_intersections = new List<(long, double, double)>()
+                    };
+                    long id = long.Parse(parts[0]);
+                    Intersections[id] = intersection;
+                }
 
+                // Read the number of roads
+                line = reader.ReadLine();
+                int m = int.Parse(line);
+
+                // Read each road and update neighboring intersections
+                for (int i = 0; i < m; i++)
+                {
+                    line = reader.ReadLine();
+                    var parts = line.Split(' ');
+                    long from_id = long.Parse(parts[0]);
+                    long to_id = long.Parse(parts[1]);
+                    double LengthKm = double.Parse(parts[2]);
+                    double SpeedKmph = double.Parse(parts[3]);
+
+                    // Add neighbor to both intersections (bidirectional)
+                    Intersection intersection = Intersections[from_id];
+                    Intersection intersection2 = Intersections[to_id];
+                    intersection.neighbor_intersections.Add((to_id, LengthKm, SpeedKmph));
+                    intersection2.neighbor_intersections.Add((from_id, LengthKm, SpeedKmph));
+                }
             }
         }
 
@@ -295,91 +376,86 @@ namespace MapRoutingProject
         //    return results;
         //}
 
-        public static Output dijkstra(Dictionary<long, Intersection> graph, long start, long end)
+        private static Output dijkstra(Dictionary<long, Intersection> graph, long start, long end)
         {
             var output = new Output();
-            int nodeCount = graph.Count;
+            var count = graph.Count;
 
-            // Preallocate dictionaries for cost, previous, and distanceTo.
-            var cost = new Dictionary<long, double>(nodeCount);
-            var previous = new Dictionary<long, long?>(nodeCount);
-            var distanceTo = new Dictionary<long, double>(nodeCount);
-
+            // Pre-allocate dictionaries with exact capacity
+            var cost = new Dictionary<long, double>(count);
+            var previous = new Dictionary<long, long?>(count);
+            var visited = new HashSet<long>();
+            var pq = new PriorityQueue<long, double>(count);
+            //**************************************
+            // Initialize data structures
             foreach (var node in graph.Keys)
             {
                 cost[node] = double.MaxValue;
                 previous[node] = null;
-                distanceTo[node] = 0.0;
             }
-            cost[start] = 0.0;
-            distanceTo[start] = 0.0;
 
-            var pq = new PriorityQueue<long, double>();
-            pq.Enqueue(start, 0.0);
+            cost[start] = 0;
+            pq.Enqueue(start, 0);
 
             while (pq.Count > 0)
             {
-                pq.TryDequeue(out long currentNode, out double currentTime);
-                if (currentTime > cost[currentNode])
-                    continue;
+                var currentNode = pq.Dequeue();
 
-                foreach (var (neighborId, distance, speed) in graph[currentNode].neighbor_intersections)
+                if (visited.Contains(currentNode)) continue;
+                if (currentNode == end) break;
+
+                visited.Add(currentNode);
+                var currentCost = cost[currentNode];
+                var neighbors = graph[currentNode].neighbor_intersections;
+
+                // Process neighbors with minimal allocations
+                for (int i = 0; i < neighbors.Count; i++)
                 {
-                    double travelTime = distance / speed;
-                    double newTime = cost[currentNode] + travelTime;
-                    if (newTime < cost[neighborId])
+                    var (neighborId, distance, speed) = neighbors[i];
+                    if (visited.Contains(neighborId)) continue;
+
+                    var newCost = currentCost + (distance / speed);
+                    if (newCost < cost[neighborId])
                     {
-                        cost[neighborId] = newTime;
-                        distanceTo[neighborId] = distanceTo[currentNode] + distance;
+                        cost[neighborId] = newCost;
                         previous[neighborId] = currentNode;
-                        pq.Enqueue(neighborId, newTime);
+                        pq.Enqueue(neighborId, newCost);
                     }
                 }
             }
 
-            // Reconstruct the path by following the previous pointers.
+            // Optimized path reconstruction
             var path = new List<long>();
             for (long? at = end; at != null; at = previous[at.Value])
+            {
                 path.Add(at.Value);
+            }
             path.Reverse();
 
-            output.Path = path;
-            output.Total_walking_distance = 0.0;
-            output.Vehicle_distance = 0.0;
-
-            // Iterate through the found path and compute distances.
-            double Total_dis_walking = 0.0, total_dis_vhicle = 0.0;
+            // Calculate distances
+            double walkingDist = 0, vehicleDist = 0;
             for (int i = 1; i < path.Count; i++)
             {
-                long from = path[i - 1];
-                long to = path[i];
-                double edgeDistance = 0.0;
-                var neighbors = graph[from].neighbor_intersections;
-                for (int j = 0; j < neighbors.Count; j++)
-                {
-                    if (neighbors[j].Item1 == to)
-                    {
-                        edgeDistance = neighbors[j].Item2;
-                        break;
-                    }
-                }
+                var from = path[i - 1];
+                var to = path[i];
+                var edge = graph[from].neighbor_intersections.Find(n => n.Item1 == to);
+
                 if (from == -1 || to == 1000000)
-                    Total_dis_walking += edgeDistance;
+                    walkingDist += edge.Item2;
                 else
-                    total_dis_vhicle += edgeDistance;
+                    vehicleDist += edge.Item2;
             }
-            output.Total_walking_distance += Total_dis_walking;
-            output.Vehicle_distance += total_dis_vhicle;
 
-            if (path.Count > 0 && path[0] == -1)
-                path.RemoveAt(0);
-            if (path.Count > 0 && path[path.Count - 1] == 1000000)
-                path.RemoveAt(path.Count - 1);
+            // Clean path endpoints
+            if (path.Count > 0 && path[0] == -1) path.RemoveAt(0);
+            if (path.Count > 0 && path[^1] == 1000000) path.RemoveAt(path.Count - 1);
 
-            output.Total_distance = Math.Round(output.Total_walking_distance + output.Vehicle_distance, 2);
-            output.Total_walking_distance = Math.Round(output.Total_walking_distance, 2);
-            output.Vehicle_distance = Math.Round(output.Vehicle_distance, 2);
+            // Set output values
+            output.Path = path;
             output.Shortest_time = Math.Round(cost[end] * 60, 2);
+            output.Total_distance = Math.Round(walkingDist + vehicleDist, 2);
+            output.Total_walking_distance = Math.Round(walkingDist, 2);
+            output.Vehicle_distance = Math.Round(vehicleDist, 2);
 
             return output;
         }
