@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Raheeq Ayman\\Downloads\\submit algo project\\MapRoutingProject\\MapRoutingProject\\MapRoutingProject.csproj": {}
+    "D:\\MapRoutingProject\\MapRoutingProject\\MapRoutingProject\\MapRoutingProject\\MapRoutingProject.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Raheeq Ayman\\Downloads\\submit algo project\\MapRoutingProject\\MapRoutingProject\\MapRoutingProject.csproj": {
+    "D:\\MapRoutingProject\\MapRoutingProject\\MapRoutingProject\\MapRoutingProject\\MapRoutingProject.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Raheeq Ayman\\Downloads\\submit algo project\\MapRoutingProject\\MapRoutingProject\\MapRoutingProject.csproj",
+        "projectUniqueName": "D:\\MapRoutingProject\\MapRoutingProject\\MapRoutingProject\\MapRoutingProject\\MapRoutingProject.csproj",
         "projectName": "MapRoutingProject",
-        "projectPath": "C:\\Users\\Raheeq Ayman\\Downloads\\submit algo project\\MapRoutingProject\\MapRoutingProject\\MapRoutingProject.csproj",
-        "packagesPath": "C:\\Users\\Raheeq Ayman\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Raheeq Ayman\\Downloads\\submit algo project\\MapRoutingProject\\MapRoutingProject\\obj\\",
+        "projectPath": "D:\\MapRoutingProject\\MapRoutingProject\\MapRoutingProject\\MapRoutingProject\\MapRoutingProject.csproj",
+        "packagesPath": "C:\\Users\\Safwa\\.nuget\\packages\\",
+        "outputPath": "D:\\MapRoutingProject\\MapRoutingProject\\MapRoutingProject\\MapRoutingProject\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Raheeq Ayman\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Safwa\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
